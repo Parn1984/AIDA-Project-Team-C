@@ -1,10 +1,13 @@
-# AIDA-Team-C-Project
+# AIDA-Project-Team-C
+
+### Team Members
+- Jann Erik Dietert
+- Tobias Habermann
+- Marcus P. Sauer
 
 ## Project Description
 
 ### Motivation
-
-###  
 
 ## Project Structure
 
