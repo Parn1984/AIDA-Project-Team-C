@@ -1,9 +1,3 @@
-# project local files
-data/
-
-# for sync of folders for git
-!data/.gitkeep
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
