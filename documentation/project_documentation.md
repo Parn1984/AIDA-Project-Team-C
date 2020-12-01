@@ -38,7 +38,73 @@ To carry out the assessment of the project, the group has to submit the followin
 - Collaborative work using Git with commit + push changes on a daily basis.
 - A presentation explaining the thought process, your approaches and the reason for this choice, your findings and the real task division in your group at the end of the project. Every group has 15 minutes per presentation and there will be 5 minutes of questions.
 
+# Telecom Customer Churn Prediction
 
-# Project Documentation
+## Project Description
 
-## 
+### Project Source
+This Project is part of the AIDA (Artifical Intelligence & Data Analysis) training programm within Deutsche Telekom AG.
+It is the final project of the theoretical training part and is organized in cooperation with the DFKI (Deutsche Gesselschaft für künstliche Intelligenz). 
+
+### Project Assignment
+1. Understand the content that is available in the dataset.
+2. Pre-process the data and do feature selection to extract the most important features.
+3. Use a two fold cross-validation approach for evaluating all of the algorithms mentioned below.
+4. Feed Forward based classification
+    - Build a feed forward neural network to classify the records into one of the two categories.
+    - Compare the performance of different activation functions and loss functions on the proposed task.
+    - Analyze the outcomes.
+5. Classification method of your choice
+    - Use a classifier of your choice to classify the records into one of the two categories.
+    - Analyze the impact of hyperparameters on the performance of the model on validation and test sets.
+    - Analyze the outcomes.
+6. Use the different packages of visualization explained during the course to visualize findings from both approaches.
+7. Compare the results from both classifiers from the accuracy point of view.
+
+### Team Members
+- Jann Erik Dietert
+- Tobias Habermann
+- Marcus P. Sauer
+
+## Project Documentation
+
+### First Steps
+
+#### Data Explotration
+- What data is available?
+    - churn.csv 
+- How much data is it?
+    - 5000 Datensätze mit 21 Features
+- What are the features of the data?
+
+Feature name | Data type | Statistics | Description
+---|---|---|---
+class (target) | nominal | 2 unique values (0 missing) | 1=churned / 0=not churned (assumed)
+state | numeric | 51 unique values (0 missing) | unclear
+account_length | numeric | 218 unique values (0 missing) | unclear
+area_code | nominal | 3 unique values (0 missing) | area code of the account
+phone_number | numeric | 5000 unique values (0 missing) | phone number of account
+international_plan | nominal | 2 unique values (0 missing) | 1=int. plan booked / 0=not booked (assumed)
+voice_mail_plan | nominal | 2 unique values (0 missing) | 1=voice mail plan booked / 0=not booked (assumed)
+number_vmail_messages | numeric | 48 unique values (0 missing) | number of received voice mails
+total_day_minutes | numeric | 1961 unique values (0 missing)
+total_day_calls | numeric | 123 unique values (0 missing)
+total_day_charge | numeric | 1961 unique values (0 missing)
+total_eve_minutes | numeric | 1879 unique values (0 missing)
+total_eve_calls | numeric | 126 unique values (0 missing)
+total_eve_charge | numeric | 1659 unique values (0 missing)
+total_night_minutes | numeric | 1853 unique values (0 missing)
+total_night_calls | numeric | 131 unique values (0 missing)
+total_night_charge | numeric | 1028 unique values (0 missing)
+total_intl_minutes | numeric | 170 unique values (0 missing)
+total_intl_calls | numeric | 21 unique values (0 missing)
+total_intl_charge | numeric | 170 unique values (0 missing)
+number_customer_service_calls | nominal | 10 unique values (0 missing) 
+ 
+- Open Questions about the data:
+    - What timeframe does the data reflect? (week,month, year)
+    - What exactly is represented by the value 'state'? (since 'area code' suggest no mix of states)
+    
+#### Goal after Data Exploration
+- high recall value
+- predict rater false negative, than false positive (churn, even if customer would not leave), but keep the value as low as possible.
