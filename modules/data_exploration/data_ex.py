@@ -33,11 +33,11 @@ def gen_bulk_data(my_file):
     x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.5, stratify=y_test)
 
     x_train = x_train.reset_index()
+    # y_train = y_train.reset_index()
     x_test = x_test.reset_index()
-    y_train = y_train.reset_index()
-    y_test = y_test.reset_index()
+    # y_test = y_test.reset_index()
     x_val = x_val.reset_index()
-    y_val = y_val.reset_index()
+    # y_val = y_val.reset_index()
 
     bulk['original'] = {'x_train': x_train,
                         'y_train': y_train,
