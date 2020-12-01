@@ -1,7 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 
 
 def import_data(my_file):
@@ -32,12 +31,12 @@ def gen_bulk_data(my_file):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, stratify=y)
     x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.5, stratify=y_test)
 
-    x_train = x_train.reset_index()
-    # y_train = y_train.reset_index()
-    x_test = x_test.reset_index()
-    # y_test = y_test.reset_index()
-    x_val = x_val.reset_index()
-    # y_val = y_val.reset_index()
+    x_train = x_train.reset_index(drop=True)
+    y_train = y_train.reset_index(drop=True)
+    x_test = x_test.reset_index(drop=True)
+    y_test = y_test.reset_index(drop=True)
+    x_val = x_val.reset_index(drop=True)
+    y_val = y_val.reset_index(drop=True)
 
     bulk['original'] = {'x_train': x_train,
                         'y_train': y_train,
@@ -69,9 +68,23 @@ def gen_bulk_data(my_file):
                       'x_val': x_val_scaled,
                       'y_val': y_val}
 
-    """bulk['encoded'] =
+    x_train_enc = enc(x_train)
+    x_test_enc = enc(x_test)
+    x_val_enc = enc(x_val)
+    bulk['encoded'] = {'x_train': x_train_enc,
+                       'y_train': y_train,
+                       'x_test': x_test_enc,
+                       'y_test': y_test,
+                       'x_val': x_val_enc,
+                       'y_val': y_val}
 
-    bulk['scaled and encoded'] ="""
+    x_train_enc_sca, x_test_enc_sca, x_val_enc_sca = scale_data(x_train_enc, x_test_enc, x_val_enc)
+    bulk['encoded and scaled'] = {'x_train': x_train_enc_sca,
+                                  'y_train': y_train,
+                                  'x_test': x_test_enc_sca,
+                                  'y_test': y_test,
+                                  'x_val': x_val_enc_sca,
+                                  'y_val': y_val}
 
     bulk['scaled and dropped'] = {'x_train': x_train_scaled.drop(columns=col_drop, axis=1),
                                   'y_train': y_train,
@@ -83,8 +96,14 @@ def gen_bulk_data(my_file):
     return bulk
 
 
-def encode_data(my_df):
-    enc_col = ['state', 'area_code']
+def enc(my_df):
+    state_enc = pd.get_dummies(data=my_df['state'], prefix='state')
+    area_enc = pd.get_dummies(data=my_df['area_code'], prefix='area')
+    encoded = state_enc.merge(area_enc, left_index=True, right_index=True, how="left")
+    df_enc = my_df.drop(columns=['state', 'area_code'], axis=1)
+    df_enc = df_enc.merge(encoded, left_index=True, right_index=True, how="left")
+
+    return df_enc
 
 
 def scale_data(my_x_train, my_x_test, my_x_val):
@@ -151,6 +170,8 @@ if __name__ == '__main__':
     """
     data_file = '../../data/churn.csv'
     df = gen_bulk_data(data_file)
+    print(df.keys())
+
     for key, value in df.items():
         print('###########')
         print('# {}'.format(key))
