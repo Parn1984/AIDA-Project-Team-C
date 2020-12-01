@@ -14,13 +14,24 @@ def import_data(my_file):
     return my_df
 
 
-def gen_bulk_data(my_file):
+def gen_bulk_data(my_file, keep=None):
     f"""
-    Return a dictionary, which contains different formated dataframes
+    Return a dictionary, which contains different formated dataframes 
     :param my_file: file name and path as string (csv file expected)
+    :param keep: optional list of columns to keep, when dropping.
+                 Default List of dropped columns when empty: 
+                 ['state',
+                  'area_code',
+                  'phone_number',
+                  'total_day_charge',
+                  'total_eve_charge',
+                  'total_night_charge',
+                  'total_intl_charge']
     :return: dictionary which includes several dictionaries each containing 6 different dataframes
              'x_train' / 'x_test' / 'x_val' / 'y_train' / 'y_test' / 'y_val'
     """
+    if keep is None:
+        keep = []
     bulk = {}
 
     my_df = import_data(my_file)
@@ -52,6 +63,11 @@ def gen_bulk_data(my_file):
                 'total_eve_charge',
                 'total_night_charge',
                 'total_intl_charge']
+
+    if len(keep) > 0:
+        for entry in keep:
+            if entry in col_drop:
+                col_drop.remove(entry)
 
     bulk['dropped'] = {'x_train': x_train.drop(columns=col_drop, axis=1),
                        'y_train': y_train,
