@@ -3,6 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
+
 def import_data(my_file):
     """
     used to import the project data into a pandas dataframe
@@ -10,6 +11,7 @@ def import_data(my_file):
     :return: pandas dataframe
     """
     my_df = pd.read_csv(my_file)
+
     return my_df
 
 
