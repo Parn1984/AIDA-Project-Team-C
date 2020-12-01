@@ -33,11 +33,11 @@ def gen_bulk_data(my_file):
     x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.5, stratify=y_test)
 
     x_train = x_train.reset_index()
+    # y_train = y_train.reset_index()
     x_test = x_test.reset_index()
-    y_train = y_train.reset_index()
-    y_test = y_test.reset_index()
+    # y_test = y_test.reset_index()
     x_val = x_val.reset_index()
-    y_val = y_val.reset_index()
+    # y_val = y_val.reset_index()
 
     bulk['original'] = {'x_train': x_train,
                         'y_train': y_train,
@@ -84,7 +84,7 @@ def gen_bulk_data(my_file):
 
 
 def encode_data(my_df):
-    enc_col = ['state', 'area_code', '']
+    enc_col = ['state', 'area_code']
 
 
 def scale_data(my_x_train, my_x_test, my_x_val):
@@ -127,6 +127,22 @@ def scale(my_set, scaler, first=True):
     return_df = my_set.drop(columns=sca_columns, axis=1)
     return_df = return_df.merge(scaled, left_index=True, right_index=True, how="left")
     return return_df
+
+
+def get_bulk_inst(my_bulk, instance):
+    """
+    :param my_bulk: bulk dictionary as provided by gen_bulk_data()
+    :param instance: requested instance of the bulk dictionary
+    :return: x_train, x_test, x_val, y_train, y_test, y_val
+    """
+    x_train = my_bulk[instance]['x_train']
+    x_test = my_bulk[instance]['x_test']
+    x_val = my_bulk[instance]['x_val']
+    y_train = my_bulk[instance]['y_train']
+    y_test = my_bulk[instance]['y_test']
+    y_val = my_bulk[instance]['y_val']
+
+    return x_train, x_test, x_val, y_train, y_test, y_val
 
 
 if __name__ == '__main__':
