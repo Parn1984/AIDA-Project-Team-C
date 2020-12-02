@@ -106,5 +106,25 @@ number_customer_service_calls | nominal | 10 unique values (0 missing)
     - What exactly is represented by the value 'state'? (since 'area code' suggest no mix of states)
     
 #### Goal after Data Exploration
-- high recall value
-- predict rater false negative, than false positive (churn, even if customer would not leave), but keep the value as low as possible.
+
+## Metrics
+The given task is a ***binary classification*** with the following class labels:
+* 0 : retained customer
+* 1 : churned customer
+
+Raw data shows an ***imbalanced class distribution*** with an much higher amount of retaining customers. 
+![class distribution](figure-png/class_distribution.png)
+Since we have an imbalanced class distribution accuracy is not the optimal metric. 
+E.g. if a model would predict always 0 (no churn), we already have 
+approx. 0.86 accuracy but would totally fail to predict churns.
+
+
+It is necessary to observe a ***high recall value*** 
+i.e. to have nearly all churners in the set of customers 
+identified for potential churn
+
+
+Unfortunately this could also increase the number of retaining customers seen as 
+churners by mistake, this could be crucial in further handling churners if the 
+number of retaining customers seen as churners is significantly higher than the real customers.
+So also the ***precision must be montored*** to have an acceptable number of customers being seen as churner but are not. 
