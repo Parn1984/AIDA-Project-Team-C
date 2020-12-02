@@ -12,6 +12,8 @@ Methods:
 import tensorflow as tf
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Input, Dropout, Activation
+from tensorflow.keras.metrics import Recall, Precision
+
 
 from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
@@ -23,7 +25,9 @@ import seaborn as sns
 
 def build_model(input_shape=20, hidden_shapes=[32], hidden_activation='relu',
                 opt='adam', dropout=0.1, loss='binary_crossentropy',
-                metrics=['accuracy', tf.keras.metrics.Precision(), tf.keras.metrics.Recall()]):
+                metrics=['accuracy', tf.keras.metrics.Precision(name='precision'), tf.keras.metrics.Recall(name='recall')]):
+                #metrics=['accuracy', Precision(class_id=1, name='precision_1'), Recall(class_id=1, name='recall_1')]):
+
     # INPUT layer
     input_lay = Input(shape=(input_shape,), name='input')
 
@@ -55,7 +59,7 @@ def build_model(input_shape=20, hidden_shapes=[32], hidden_activation='relu',
 # function for model-set-up Sequential
 def build_model_seq(input_shape=20, hidden_shapes=[32], hidden_activation='relu',
                     opt='adam', dropout=0.0, loss='binary_crossentropy',
-                    metrics=['accuracy', tf.keras.metrics.Precision(), tf.keras.metrics.Recall()]):
+                    metrics=['accuracy', tf.keras.metrics.Precision(name='precision'), tf.keras.metrics.Recall(name='recall')]):
 
     model = Sequential()
 
@@ -93,6 +97,7 @@ def plot_confusion_matrix(y_test, y_pred, cmap='RdYlGn', normalize='true'):
     plt.title("Confusion Matrix", fontweight='bold')
     plt.xticks(fontsize=12, fontweight='bold')
     plt.yticks(fontsize=12, fontweight='bold')
+    plt.show()
 
 
 def print_classification_report(y_test, y_pred):
