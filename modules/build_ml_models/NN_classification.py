@@ -33,7 +33,7 @@ def build_model(input_shape=20, hidden_shapes=[32], hidden_activation='relu',
 
     # first HIDDEN layer
     if len(hidden_shapes) > 0:
-        print(hidden_shapes[0])
+        #print(hidden_shapes[0])
         x = Dense(hidden_shapes[0], activation=hidden_activation, name='hidden_dense_1')(input_lay)
         # add Dropout layer
         if dropout > 0:
