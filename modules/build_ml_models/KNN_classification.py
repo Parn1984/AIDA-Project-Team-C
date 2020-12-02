@@ -18,7 +18,7 @@ Methods:
 
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -29,9 +29,9 @@ import seaborn as sns
 
 class KNN_classification():
     KNNmodel = KNeighborsClassifier()
-    X_train = None
+    x_train = None
     y_train = None
-    X_test = None
+    x_test = None
     y_test = None
     y_pred = None
     accuracy = None
@@ -41,24 +41,24 @@ class KNN_classification():
         print('KNN Classification created')
 
     # Set trainings set
-    def set_train(self, X_train, y_train):
-        self.X_train = X_train
+    def set_train(self, x_train, y_train):
+        self.x_train = x_train
         self.y_train = y_train
 
     # Set test set
-    def set_test(self, X_test, y_test):
-        self.X_test = X_test
+    def set_test(self, x, y_test):
+        self.x_test = x
         self.y_test = y_test
 
     # fit the model
     def fit(self):
-        self.KNNmodel.fit(self.X_train, self.y_train)
+        self.KNNmodel.fit(self.x_train, self.y_train)
 
     def predict(self):
-        self.y_pred = self.KNNmodel.predict(self.X_test)
+        self.y_pred = self.KNNmodel.predict(self.x_test)
 
     def get_cross_validation_accuracy(self):
-        self.cv_score = cross_val_score(self.KNNmodel, self.X_train, self.y_train, cv=self.cv_folds)
+        self.cv_score = cross_val_score(self.KNNmodel, self.x_train, self.y_train, cv=self.cv_folds)
         return self.cv_score.mean()
 
     def get_test_accuracy(self):
@@ -69,7 +69,7 @@ class KNN_classification():
     def tune_parameters(self):
 
         # it is good practice to use sqrt of features as k
-        sqrt_k = int(round(len(self.X_train) ** 0.5, 0))
+        sqrt_k = int(round(len(self.x_train) ** 0.5, 0))
         print('Square-root of number of datasets:', sqrt_k)
 
         self.dict_KNN = dict()
@@ -85,8 +85,8 @@ class KNN_classification():
                 #              influence than neighbors which are further away.
 
                 tuneKNNmodel = KNeighborsClassifier(n_neighbors=k, weights=weight)
-                tuneKNNmodel.fit(self.X_train, self.y_train)
-                KNNscores = cross_val_score(tuneKNNmodel, self.X_train, self.y_train, cv=self.cv_folds)
+                tuneKNNmodel.fit(self.x_train, self.y_train)
+                KNNscores = cross_val_score(tuneKNNmodel, self.x_train, self.y_train, cv=self.cv_folds)
 
                 score = KNNscores.mean()
 
@@ -119,25 +119,31 @@ class KNN_classification():
         plt.grid(color='lightgray')
         plt.show()
 
-    def plot_confusion_matrix(self):
+    def plot_confusion_matrix(self, normalize='true', figsize=(9, 6), font_scale=1.4):
 
-        # print dtaframe
-        conf_matrix = pd.DataFrame(confusion_matrix(self.y_test, self.y_pred, normalize='true'),
-                                   columns=['churn', 'no churn'], index=['churn', 'no churn'])
-        conf_matrix.index.name = "True Label"
-        conf_matrix.columns.name = "Predicted Label"
-        display(conf_matrix)
-
-        # plot
-        # sns.heatmap(conf_matrix, annot=True, cmap='Greens')
-        data = confusion_matrix(self.y_test, self.y_pred)
+        if normalize == 'true':
+            format = '.5f'
+        else:
+            format = 'd'
+        # calculate confusion matrix
+        data = confusion_matrix(self.y_test, self.y_pred, normalize=normalize)
         df_cm = pd.DataFrame(data, columns=['no churn', 'churn'], index=['no churn', 'churn'])
         df_cm.index.name = 'Actual'
         df_cm.columns.name = 'Predicted'
-        plt.figure(figsize=(9, 6))
-        sns.set(font_scale=1.4)  # for label size
-        sns.heatmap(df_cm, cmap='RdYlGn', annot=True, annot_kws={"size": 14}, fmt='d')
+
+        # print dataframe
+        display(df_cm)
+
+        # plot
+        plt.figure(figsize=figsize)
+        sns.set(font_scale=font_scale)  # for label size
+        sns.heatmap(df_cm, cmap='RdYlGn', annot=True, annot_kws={"size": 14}, fmt=format)
         plt.title("Confusion Matrix", fontweight='bold')
         plt.xticks(fontsize=12, fontweight='bold')
         plt.yticks(fontsize=12, fontweight='bold')
         plt.show()
+
+        print("\nClassification report:\n", classification_report(self.y_test, self.y_pred))
+
+
+
