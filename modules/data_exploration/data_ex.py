@@ -14,6 +14,14 @@ def import_data(my_file):
     return my_df
 
 
+def gen_xy(my_file):
+    my_df = import_data(my_file)
+
+    y = my_df['class']
+    x = my_df.drop(['class'], axis=1)
+    return x, y
+
+
 def gen_bulk_data(my_file, keep=None):
     f"""
     Return a dictionary, which contains different formated dataframes 
@@ -34,10 +42,7 @@ def gen_bulk_data(my_file, keep=None):
         keep = []
     bulk = {}
 
-    my_df = import_data(my_file)
-    
-    y = my_df['class']
-    x = my_df.drop(['class'], axis=1)
+    x, y = gen_xy(my_file)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, stratify=y)
     x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.5, stratify=y_test)
