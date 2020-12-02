@@ -65,6 +65,10 @@ def fea_im_etc(my_x, my_y, my_feat):
     print('###')
     print('### Feature Importance with Extra Trees Classifier')
     print('###')
+    print('DTC = DecisionTreeClassifier')
+    print('RFC = RandomForestClassifier')
+    print('ABC = AdaBoostClassifier')
+    print('ETC = ExtraTreesClassifier')
     print(feat_imp)
     return feat_imp
 
