@@ -3,6 +3,9 @@ from data_ex import scale
 import pandas as pd
 from sklearn.feature_selection import RFE
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
 from sklearn.decomposition import PCA
 
 
@@ -39,16 +42,31 @@ def fea_ex_pca(my_x):
 # Feature Importance with Extra Trees Classifier
 def fea_im_etc(my_x, my_y, my_feat):
     # feature extraction
-    model = DecisionTreeClassifier()
-    model.fit(my_x, my_y)
+    dtc = DecisionTreeClassifier()
+    dtc.fit(my_x, my_y)
+
+    etc = ExtraTreesClassifier(n_estimators=10)
+    etc.fit(my_x, my_y)
+
+    rfc = RandomForestClassifier()
+    rfc.fit(my_x, my_y)
+
+    abc = AdaBoostClassifier()
+    abc.fit(my_x, my_y)
+
+    pd.options.display.max_columns = None
+    feat_imp = pd.DataFrame(
+        {'Importance DTC': dtc.feature_importances_,
+         'Importance RFC': rfc.feature_importances_,
+         'Importance ABC': abc.feature_importances_,
+         'Importance ETC': etc.feature_importances_},
+        index=[my_feat])
+
     print('###')
     print('### Feature Importance with Extra Trees Classifier')
     print('###')
-    feat_imp = pd.DataFrame(
-        {'Feature Name': my_feat,
-         'Feature Importance': model.feature_importances_
-         })
-    print(feat_imp.sort_values(by='Feature Importance', ascending=False))
+    print(feat_imp)
+    return feat_imp
 
 
 if __name__ == '__main__':
