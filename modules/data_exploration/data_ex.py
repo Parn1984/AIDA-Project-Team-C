@@ -143,7 +143,9 @@ def scale_data(my_x_train, my_x_test, my_x_val):
 
     std = StandardScaler()
 
-    sca_columns = ['number_vmail_messages',
+    sca_columns = ['account_length',
+                   'number_customer_service_calls',
+                   'number_vmail_messages',
                    'total_day_minutes',
                    'total_day_calls',
                    'total_day_charge',

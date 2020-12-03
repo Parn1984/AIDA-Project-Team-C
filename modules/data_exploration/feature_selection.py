@@ -84,7 +84,25 @@ if __name__ == '__main__':
     feat = x.columns
 
     std = StandardScaler()
-    x = scale(x, std)
+
+    sca_columns = ['account_length',
+                   'number_customer_service_calls',
+                   'number_vmail_messages',
+                   'total_day_minutes',
+                   'total_day_calls',
+                   'total_day_charge',
+                   'total_eve_minutes',
+                   'total_eve_calls',
+                   'total_eve_charge',
+                   'total_night_minutes',
+                   'total_night_calls',
+                   'total_night_charge',
+                   'total_intl_minutes',
+                   'total_intl_calls',
+                   'total_intl_charge']
+
+    std.fit(x[sca_columns])
+    x = scale(x, std, sca_columns)
     fea_ex_rfe(x, y, feat)
     fea_ex_pca(x)
     fea_im_etc(x, y, feat)
