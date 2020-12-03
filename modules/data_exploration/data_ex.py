@@ -15,6 +15,11 @@ def import_data(my_file):
 
 
 def gen_xy(my_file):
+    """
+    loads data and split it into X and y
+    :param my_file: file name and path as string (csv file expected)
+    :return: x dataframe and y series
+    """
     my_df = import_data(my_file)
 
     y = my_df['class']
@@ -137,15 +142,7 @@ def scale_data(my_x_train, my_x_test, my_x_val):
     """
 
     std = StandardScaler()
-    my_x_train_scaled = scale(my_x_train, std)
-    my_x_test_scaled = scale(my_x_test, std, False)
-    my_x_val_scaled = scale(my_x_val, std, False)
 
-    return my_x_train_scaled, my_x_test_scaled, my_x_val_scaled
-
-
-def scale(my_set, scaler, first=True):
-    # columns to scale
     sca_columns = ['number_vmail_messages',
                    'total_day_minutes',
                    'total_day_calls',
@@ -159,12 +156,28 @@ def scale(my_set, scaler, first=True):
                    'total_intl_minutes',
                    'total_intl_calls',
                    'total_intl_charge']
-    if first:
-        scaled = scaler.fit_transform(my_set[sca_columns])
-    else:
-        scaled = scaler.transform(my_set[sca_columns])
-    scaled = pd.DataFrame(scaled, columns=sca_columns)
-    return_df = my_set.drop(columns=sca_columns, axis=1)
+
+    std.fit(my_x_train[sca_columns])
+
+    my_x_train_scaled = scale(my_x_train, std, sca_columns)
+    my_x_test_scaled = scale(my_x_test, std, sca_columns)
+    my_x_val_scaled = scale(my_x_val, std, sca_columns)
+
+    return my_x_train_scaled, my_x_test_scaled, my_x_val_scaled
+
+
+def scale(my_set, scaler, my_sca_columns):
+    """
+    Uses provided scaler
+    :param my_set: dataframe to be scaled
+    :param scaler: scaler to be used
+    :param my_sca_columns: dataframe columns to scale
+    :return: provided dataframe, with scaled columns
+    """
+
+    scaled = scaler.transform(my_set[my_sca_columns])
+    scaled = pd.DataFrame(scaled, columns=my_sca_columns)
+    return_df = my_set.drop(columns=my_sca_columns, axis=1)
     return_df = return_df.merge(scaled, left_index=True, right_index=True, how="left")
     return return_df
 
