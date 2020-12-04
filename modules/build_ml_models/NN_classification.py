@@ -16,12 +16,16 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Input, Dropout, Activation
 from tensorflow.keras.metrics import Recall, Precision
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 
 from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import numpy as np
+import importlib
 
 
 # function for dynamical dense model set up
@@ -82,6 +86,7 @@ def build_model_seq(input_shape=20, hidden_shapes=[32], hidden_activation='relu'
 
 # Plot a nice confusion matrix
 def plot_confusion_matrix(y_test, y_pred, cmap='RdYlGn', normalize='true'):
+    importlib.reload(sns)
 
     if normalize == 'true':
         format = '.4f'
@@ -107,11 +112,13 @@ def print_classification_report(y_test, y_pred):
 
 
 def plot_learning_curves(fit_history, figsize=(23, 7)):
+    importlib.reload(plt)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
 
     ax1.plot(fit_history.history['accuracy'], label='train accuracy')
     ax1.plot(fit_history.history['val_accuracy'], label='validation accuracy')
+
     ax1.set_xlabel('epochs')
     ax1.set_title('Accuracy')
     ax2.plot(fit_history.history['val_precision'], label='validation precision')
@@ -125,7 +132,48 @@ def plot_learning_curves(fit_history, figsize=(23, 7)):
     ax2.legend()
     plt.show()
 
+
+def plot_learning_curves_opt(fit_history, figsize=(23, 7)):
+    importlib.reload(plt)
+    val_acc_max = np.max(fit_history.history['val_accuracy'])
+    val_acc_idx = np.argmax(fit_history.history['val_accuracy'])
+
+    val_rec_max = np.max(fit_history.history['val_recall'])
+    val_rec_idx = np.argmax(fit_history.history['val_recall'])
+    val_pre_max = np.max(fit_history.history['val_precision'])
+    val_pre_idx = np.argmax(fit_history.history['val_precision'])
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
+
+    ax1.plot(fit_history.history['accuracy'], label='train accuracy', c='C0')
+    ax1.plot(fit_history.history['val_accuracy'], label='validation accuracy', c='C1')
+    # best val accuraacy
+    ax1.axhline(val_acc_max, color='C1', linestyle='-.', linewidth=1, alpha=0.6)
+    ax1.axvline(val_acc_idx, color='C1', linestyle='-.', linewidth=1, alpha=0.6)
+    ax1.scatter(val_acc_idx, val_acc_max, color='red', s=20, alpha=0.6)
+    ax1.set_xlabel('epochs')
+    ax1.set_title('Accuracy')
+
+    ax2.plot(fit_history.history['val_precision'], label='validation precision')
+    ax2.plot(fit_history.history['val_recall'], label='validation recall')
+
+    ax2.axhline(val_pre_max, color='C0', linestyle='-.', linewidth=1, alpha=0.6)
+    ax2.axvline(val_pre_idx, color='C0', linestyle='-.', linewidth=1, alpha=0.6)
+    ax2.scatter(val_pre_idx, val_pre_max, color='red', s=20, alpha=0.6)
+    ax2.axhline(val_rec_max, color='C1', linestyle='-.', linewidth=1, alpha=0.6)
+    ax2.axvline(val_rec_idx, color='C1', linestyle='-.', linewidth=1, alpha=0.6)
+    ax2.scatter(val_rec_idx, val_rec_max, color='red', s=20, alpha=0.6)
+
+    ax2.set_xlabel('epochs')
+    ax2.set_title('Precision & recall')
+
+    plt.suptitle('Metrics', fontsize=18, fontweight='bold')
+    ax1.legend()
+    ax2.legend()
+    plt.show()
+
 def plot_learning_loss(fit_history, figsize=(23, 7)):
+    importlib.reload(plt)
     plt.plot(fit_history.history['loss'], label='loss')
     plt.title('Loss over fitting epochs')
     plt.show()
