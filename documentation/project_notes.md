@@ -1,4 +1,8 @@
-********# open points
+# Links
+[documentation](https://docs.google.com/document/d/1Dr8Q31ku1e6eKFXBzJL3LGwfhvCaBetCB-LOHs1HhCM/edit?usp=sharing)  
+[Presentation](https://docs.google.com/presentation/d/1TKnLwFiMdvSMCI-fJdspzWliEpoXl-7M6I_E8iAw4mg/edit?usp=sharing)
+
+# open points
 
 To do that, the following tasks need to be accomplished:
 1. Understand the content that is available in the dataset.
