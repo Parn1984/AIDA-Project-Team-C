@@ -39,7 +39,7 @@ def fea_ex_pca(my_x):
     print(x_pca.shape)
 
 
-# Feature Importance with Extra Trees Classifier
+# Feature Importance
 def fea_im_etc(my_x, my_y, my_feat):
     # feature extraction
     dtc = DecisionTreeClassifier()
